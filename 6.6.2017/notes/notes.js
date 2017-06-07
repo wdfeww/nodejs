@@ -21,33 +21,53 @@ module.exports.readNote = () => {
 module.exports.getAll = () => {
     console.log('Note list');
 }*/
-
- var addNote = (title, body) => {
-    console.log('Added new note title:', title, 'body', body);
-    var notes=[];
+var fetchNotes = ()=>{
     try{
-       var stringNotes = fs.readFileSync('notes-data.json');
-        notes = JSON.parse(stringNotes);
+        var stringNotes = fs.readFileSync('notes-data.json');
+        return JSON.parse(stringNotes);
     }
     catch (e){
-        console.log('cannot find file');
+        return [];
     }
+}
+
+var saveNotes = (notes)=> {
+    fs.writeFileSync('notes-data.json', JSON.stringify(notes));
+}
+
+ var addNote = (title, body) => {
+    var notes = fetchNotes();
     var note = {title, body};
-    notes.push(note);
-    fs.writeFileSync('notes-data.json',JSON.stringify(notes));
+    var dupliciteNotes = notes.filter((note)=> note.title === title);
+    if(dupliciteNotes.length == 0) {
+        notes.push(note);
+        saveNotes(notes);
+        return note;
+    }
+    return null;
 }
 var add = (i, j) => {
     return (i + j);
 }
-var removeNote = () => {
-    console.log('Note removed');
+var removeNote = (title) => {
+    var notes = fetchNotes();
+    var filtredNotes = notes.filter((note)=> note.title !== title);
+    if(filtredNotes.length != notes.length) {
+        saveNotes(filtredNotes);
+        return true;
+    }
+    return false;
+
 }
-var readNote = () => {
-    console.log('Note read');
+var readNote = (title) => {
+    var notes = fetchNotes();
+    var note = notes.filter((note)=>note.title === title)
+    return note;
+
 }
 var getAll = () =>
 {
-    return
+return fetchNotes();
 }
 
 module.exports = {
