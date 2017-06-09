@@ -11,15 +11,21 @@ var encodedAddress = encodeURIComponent(address);// osetruje string ak obsahuje 
         json:true
     },(error,response,body)=>{
        if(error){
-           console.log("unable to connect to google server");
+          // console.log("unable to connect to google server");
+           callback("unable to connect to google server");
        }
        else if(body.status === 'ZERO_RESULTS'){
-           console.log("invalid address");
+          // console.log("invalid address");
+           callback("invalid address");
        }
        else{
-           console.log(body.results[0].formatted_address);
-           console.log(body.results[0].geometry.location.lat);
-           console.log(body.results[0].geometry.location.lng);
+
+          // console.log(body.results[0].formatted_address);
+          // console.log(body.results[0].geometry.location.lat);
+          // console.log(body.results[0].geometry.location.lng);
+           callback(undefined, {address:body.results[0].formatted_address,
+                                latitude:body.results[0].geometry.location.lat,
+                                longitude:body.results[0].geometry.location.lng});
        }
     })
 
