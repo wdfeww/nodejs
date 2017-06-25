@@ -1,38 +1,55 @@
 var mysql = require('mysql');
 var express = require('express');
+const hbs = require('hbs');
+
 var app = express();
-var name,age;
-var con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "nodejs"
+app.set('view engine','hbs');
+
+var pool = mysql.createPool({
+    connectionLimit: 10,
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'nodejs'
 });
 
 
-var insert = ()=>{
-    con.connect(function(err) {
-        if (err) throw err;
-        console.log("Connected!");
-    var sql = "INSERT INTO Users (name, age) VALUES ('"+name+"', '"+age+"')";
-    con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1 record inserted");
-    });
-    });
-}
+var insert = (name,age, res) => {6
 
-app.post('/user', (req,res)=>{
+    pool.getConnection((err, connection) => {
+        if (err) {
+            throw err;
+
+        }
+        var sql = "INSERT INTO Users (name, age) VALUES ('"+ name +"', " + age + ")";
+        connection.query(sql, (err, results) => {
+            if (err) {
+                throw err;
+                res.status(400).send();
+            } else {
+                console.log("user added into database");
+                res.status(200).send();
+            }
+
+        });
+        connection.release();
+    });
+};
+
+app.post('/user', (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', ' POST ');
-    name = req.query.name;
-    age = req.query.age;
-    insert();
+    var name = req.query.name;
+    var age = req.query.age;
+    insert(name, age, res);
 
 });
 
-app.get
+app.get('/', (req,res)=>{
+    res.render('index.hbs');//call back funkcia ktora bude dynamicky menit stranka
 
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+});
+
+app.listen(3030, () => {
+    console.log('Server started on port 3030');
 });

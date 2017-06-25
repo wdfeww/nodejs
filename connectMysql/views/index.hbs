@@ -3,14 +3,32 @@
 <head>
     <meta charset="utf-8">
     <title>user register</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 </head>
 
 <body>
+<script>
+    $(document).ready(function () {
+        $("#submit").on('click', function () {
+            var name = $("#name").val();
+            var age = $("#age").val();
+            $.ajax({
+                url: "http://localhost:3030/user?name=" + name +"&age=" + age
+                , method: "POST"
+            }).done(function (data) {
+                $("#result").text("user was added into database");
+            }).fail(function () {
+                $("#result").text("Error: user was not added into database");
+            });
+        });
+    });
+</script>
+
+<span>Name:</span><input type="text" id="name">
+<span>Age:</span><input type="number" id="age">
+<div id="result"></div>
+<input type="button" id="submit" value="Submit"> </body>
 
 
-
-<div>Day: {{screamIt day}}, Month: {{month}}, Year: {{getCurrentYear}}</div>
-
-{{>footer}}
 </body>
 </html>
