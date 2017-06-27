@@ -14,7 +14,7 @@ var pool = mysql.createPool({
 });
 
 
-var insert = (name,age, res) => {6
+var insert = (name,age, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) {
@@ -46,10 +46,12 @@ app.post('/user', (req, res) => {
 });
 
 app.get('/', (req,res)=>{
-    res.render('index.hbs');//call back funkcia ktora bude dynamicky menit stranka
+    res.render('index.hbs');
 
 });
 
 app.listen(3030, () => {
     console.log('Server started on port 3030');
 });
+
+module.exports = {app};
